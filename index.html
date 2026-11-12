@@ -62,12 +62,31 @@ nav button svg{width:22px;height:22px}nav button.on{color:#fff;background:linear
 .pre{flex:0 0 auto!important;padding:13px 14px;background:var(--soft);border-radius:14px;font-weight:800;color:var(--brand-d)}
 @keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#sp{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(circle at 30% 20%,#1779b8,#0b2a4a 70%);color:#fff;animation:sp .6s 1.6s forwards;pointer-events:none}
+#sp b{font-size:32px;letter-spacing:-.5px;animation:up .8s .5s both}#sp small{opacity:.8;animation:up .8s .8s both}
+#sp path{stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1s ease forwards}#sp path:nth-of-type(2){animation-delay:.25s}#sp path:nth-of-type(3){animation-delay:.5s}
+#sp circle{opacity:.5;animation:pl 1s ease-in-out infinite alternate}
+.hero{background-size:200% 200%;animation:bg 9s ease infinite alternate}
+.hero::before{animation:fl 7s ease-in-out infinite alternate}.hero::after{animation:fl 9s ease-in-out infinite alternate-reverse}
+.hero h1{font-size:30px;background:linear-gradient(90deg,#fff 20%,#a8dcff 50%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:bg 5s linear infinite alternate}
+.filters{border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,#38aaf0,#7c6cf0,#38d4e8) border-box}
+.card{transition:transform .2s}.card:active{transform:scale(.98)}
+.card:nth-child(2){animation-delay:.08s}.card:nth-child(3){animation-delay:.16s}.card:nth-child(4){animation-delay:.24s}.card:nth-child(n+5){animation-delay:.3s}
+.pc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(10px);padding:6px 13px;border-radius:14px}
+.tag{backdrop-filter:blur(8px)}
+nav button.on{box-shadow:0 8px 22px rgba(43,156,227,.55)}
+header svg circle{animation:pl 2.4s ease-in-out infinite alternate}
+.btn:not(.g):not(.r):not(.w){background-image:linear-gradient(120deg,#2b9ce3,#1779b8,#5a7df0);background-size:200% 200%;animation:bg 6s ease infinite alternate}
+@keyframes bg{to{background-position:100% 50%}}@keyframes fl{to{transform:translate(-26px,18px) scale(1.18)}}
+@keyframes pl{from{fill-opacity:.15}to{fill-opacity:.7}}@keyframes dr{to{stroke-dashoffset:0}}@keyframes sp{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){#sp{display:none}}
 </style>
 </head>
 <body>
+<div id="sp"><svg viewBox="0 0 200 200" width="130" height="130" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="146" r="30" fill="#fff" stroke="none"/><path pathLength="1" d="M72 170H42Q32 170 32 160V100L100 36L168 100V160Q168 170 158 170H128"/><path pathLength="1" d="M72 158H62Q54 158 54 150V106L100 60L146 106V150Q146 158 138 158H128"/><path pathLength="1" d="M72 170V124Q72 116 80 116H120Q128 116 128 124V170"/></svg><b>Still Home</b><small>Encore et toujours chez vous</small></div>
 <header>
 <svg width="40" height="40" viewBox="24 28 152 150" fill="none" aria-label="Still Home"><circle cx="100" cy="146" r="30" fill="#fff" fill-opacity=".35"/><g stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M72 170H42Q32 170 32 160V100L100 36L168 100V160Q168 170 158 170H128"/><path d="M72 158H62Q54 158 54 150V106L100 60L146 106V150Q146 158 138 158H128"/><path d="M72 170V124Q72 116 80 116H120Q128 116 128 124V170"/></g></svg>
-<div><b>Still Home</b><small>Toujours chez vous, à Cotonou</small></div>
+<div><b>Still Home</b><small>Encore et toujours chez vous</small></div>
 <button id="lo" onclick="logout()">Déconnexion</button>
 </header>
 <main id="v"></main>
@@ -85,7 +104,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>Number(n).toLocaleString("fr-FR").replace(/[\u202f\u00a0]/g," ")+" FCFA";
 const tel=x=>String(x.tel||"").replace(/\D/g,"");
-let EDIT=null,PH=[],L=[],M=[],user=null,tab="home",f={type:"all",q:"",max:""},pend=null,state="load";
+let EDIT=null,PH=[],L=[],M=[],user=null,tab="home",f={type:"all",q:"",max:"",per:"mois"},pend=null,state="load";
 function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2800)}
 function go(t){tab=t;pend=null;EDIT=null;render();window.scrollTo(0,0);if(t==="mine"&&user)loadMine()}
 const cover=x=>x.thumb_url||(x.photos&&x.photos[0])||(x.media_type==="image"?x.media_url:null);
@@ -100,9 +119,9 @@ const tagT=x=>x.type==="meuble"?"Meublé":"Non meublé";
 function card(x,extra){const np=(x.photos||[]).length;return `<article class="card" onclick="openD('${x.id}')"><div class="m">${media(x)}<span class="tag">${tagT(x)}</span>${x.video_url||x.media_type==="video"?'<span class="tag v">Vidéo</span>':""}<div class="pc">${prx(x)[0]}</div></div><div class="b"><h3>${esc(x.titre)}</h3><div class="mu">${pin} ${esc(x.quartier)}</div><div class="chips"><span>${lg(x)}</span>${np>1?`<span>${np} photos</span>`:""}</div>${extra||""}</div></article>`}
 function quartiers(){const s=new Set(["Cadjehoun","Fidjrossè","Haie Vive","Akpakpa","Agla","Godomey","Ganhi","Ladji","Vèdoko"]);L.forEach(x=>s.add(x.quartier));return[...s].sort()}
 const dl=()=>`<datalist id="qs">${quartiers().map(q=>`<option value="${esc(q)}">`).join("")}</datalist>`;
-function home(){return `<div class="hero"><h1>Trouvez votre chez-vous</h1><p>Appartements meublés et non meublés à Cotonou</p></div><div class="filters"><div class="seg">${[["all","Tous"],["meuble","Meublés"],["non","Non meublés"]].map(a=>`<button class="${f.type===a[0]?"on":""}" onclick="f.type='${a[0]}';render()">${a[1]}</button>`).join("")}</div><input list="qs" placeholder="Quartier…" value="${esc(f.q)}" oninput="f.q=this.value;list()"><input type="number" inputmode="numeric" placeholder="Prix max / mois (FCFA)" value="${esc(f.max)}" oninput="f.max=this.value;list()">${dl()}</div><div id="list"></div>`}
-function list(){const e=$("#list");if(!e)return;if(state==="load"&&!L.length){e.innerHTML='<div class="empty">Chargement…</div>';return}if(state==="err"&&!L.length){e.innerHTML='<div class="empty">Connexion lente ou coupée.<div class="row"><button class="btn" onclick="load()">Réessayer</button></div></div>';return}const r=L.filter(x=>(f.type==="all"||x.type===f.type)&&(!f.q||x.quartier.toLowerCase().includes(f.q.toLowerCase()))&&(!f.max||x.prix<=+f.max));e.innerHTML=r.length?r.map(x=>card(x)).join(""):'<div class="empty">Aucune annonce pour le moment.</div>'}
-async function load(){state="load";list();const r=await sb.from("annonces").select("*").eq("dispo",true).order("created_at",{ascending:false}).limit(60);if(r.error)state="err";else{L=r.data;state="ok"}list()}
+function home(){return `<div class="hero"><h1>Trouvez votre chez-vous</h1><p>Meublés ou non, trouvez le lieu qui vous ressemble.</p></div><div class="filters"><div class="seg">${[["all","Tous"],["meuble","Meublés"],["non","Non meublés"]].map(a=>`<button class="${f.type===a[0]?"on":""}" onclick="f.type='${a[0]}';render()">${a[1]}</button>`).join("")}</div><input list="qs" placeholder="Quartier ou ville…" value="${esc(f.q)}" oninput="f.q=this.value;renderList()"><select onchange="f.per=this.value;renderList()">${[["mois","Par mois"],["semaine","Par semaine"],["jour","Par jour"]].map(a=>`<option value="${a[0]}" ${f.per===a[0]?"selected":""}>${a[1]}</option>`).join("")}</select><input style="grid-column:1/-1" type="number" inputmode="numeric" placeholder="Prix maximum (FCFA)" value="${esc(f.max)}" oninput="f.max=this.value;renderList()">${dl()}</div><div id="list"></div>`}
+function renderList(){const e=$("#list");if(!e)return;if(state==="load"&&!L.length){e.innerHTML='<div class="empty">Chargement…</div>';return}if(state==="err"&&!L.length){e.innerHTML='<div class="empty">Connexion lente ou coupée.<div class="row"><button class="btn" onclick="load()">Réessayer</button></div></div>';return}const k={jour:"prix_jour",semaine:"prix_semaine",mois:"prix_mois"}[f.per],pv=x=>x[k]||(f.per==="mois"&&!x.prix_jour&&!x.prix_semaine?x.prix:null);const r=L.filter(x=>(f.type==="all"||x.type===f.type)&&(!f.q||x.quartier.toLowerCase().includes(f.q.toLowerCase()))&&(!f.max||(pv(x)!=null&&pv(x)<=+f.max)));e.innerHTML=r.length?r.map(x=>card(x)).join(""):'<div class="empty">Aucune annonce ne correspond.</div>'}
+async function load(){state="load";renderList();const r=await sb.from("annonces").select("*").eq("dispo",true).order("created_at",{ascending:false}).limit(60);if(r.error)state="err";else{L=r.data;state="ok"}renderList()}
 async function loadMine(){const r=await sb.from("annonces").select("*").eq("user_id",user.id).order("created_at",{ascending:false});if(r.error)return toast("Impossible de charger vos annonces");M=r.data;if(tab==="mine")render()}
 function auth(t){return `<h2 style="margin:4px 0">${t}</h2><form onsubmit="doAuth(event)"><label>E-mail</label><input name="e" type="email" required autocomplete="email"><label>Mot de passe (6 caractères minimum)</label><input name="p" type="password" required minlength="6" autocomplete="current-password"><div class="row"><button class="btn" type="submit" value="in">Se connecter</button><button class="btn g" type="submit" value="up">Créer un compte</button></div></form>`}
 async function doAuth(e){e.preventDefault();const d=new FormData(e.target),up=e.submitter&&e.submitter.value==="up",c={email:d.get("e").trim(),password:d.get("p")};const r=up?await sb.auth.signUp(c):await sb.auth.signInWithPassword(c);if(r.error)return toast(r.error.message);if(!r.data.session)return toast("Vérifiez votre e-mail pour confirmer votre compte");user=r.data.user;toast("Connecté ✓");render();if(tab==="mine")loadMine()}
@@ -117,11 +136,12 @@ function mine(){if(!user)return auth("Connectez-vous pour voir vos annonces");re
 function edit(id){EDIT=M.find(a=>a.id===id);tab="pub";render();window.scrollTo(0,0)}
 async function tg(id){const x=M.find(a=>a.id===id),r=await sb.from("annonces").update({dispo:!x.dispo}).eq("id",id);if(r.error)return toast("Échec, réessayez");x.dispo=!x.dispo;toast(x.dispo?"Annonce remise en ligne":"Annonce hors marché");render();load()}
 async function del(id){if(pend!==id){pend=id;return render()}const x=M.find(a=>a.id===id),r=await sb.from("annonces").delete().eq("id",id);pend=null;if(r.error)return toast("Échec, réessayez");const ps=[x.media_url,x.thumb_url,x.video_url].concat(x.photos||[]).filter(Boolean).map(u=>u.split("/medias/")[1]).filter(Boolean).map(decodeURIComponent);if(ps.length)sb.storage.from("medias").remove(ps);M=M.filter(a=>a.id!==id);toast("Annonce supprimée");render();load()}
-function openD(id){const x=[...M,...L].find(a=>a.id===id);if(!x)return;$("#sh").innerHTML=`<div class="m">${gal(x)}<button class="x" onclick="closeD()">✕</button><span class="tag">${tagT(x)}</span></div><div class="b"><h3 style="font-size:22px">${esc(x.titre)}</h3><div class="mu">${pin} ${esc(x.quartier)}, Cotonou</div><div class="chips"><span>${lg(x)}</span></div><div class="pbox">${prx(x).map(p=>`<div class="pr">${p}</div>`).join("")}</div><p style="white-space:pre-line;margin:12px 0">${esc(x.description)||"Aucune description."}</p><div class="mu">Contact : <b>${esc(x.role)}</b></div><div class="row"><a class="btn" href="tel:+${tel(x)}">📞 Appeler</a><a class="btn w" target="_blank" rel="noopener" href="https://wa.me/${tel(x)}?text=${encodeURIComponent("Bonjour, je suis intéressé par : "+x.titre+" (Still Home)")}">WhatsApp</a></div></div>`;$("#ov").classList.add("on")}
+function openD(id){const x=[...M,...L].find(a=>a.id===id);if(!x)return;$("#sh").innerHTML=`<div class="m">${gal(x)}<button class="x" onclick="closeD()">✕</button><span class="tag">${tagT(x)}</span></div><div class="b"><h3 style="font-size:22px">${esc(x.titre)}</h3><div class="mu">${pin} ${esc(x.quartier)}</div><div class="chips"><span>${lg(x)}</span></div><div class="pbox">${prx(x).map(p=>`<div class="pr">${p}</div>`).join("")}</div><p style="white-space:pre-line;margin:12px 0">${esc(x.description)||"Aucune description."}</p><div class="mu">Contact : <b>${esc(x.role)}</b></div><div class="row"><a class="btn" href="tel:+${tel(x)}">📞 Appeler</a><a class="btn w" target="_blank" rel="noopener" href="https://wa.me/${tel(x)}?text=${encodeURIComponent("Bonjour, je suis intéressé par : "+x.titre+" (Still Home)")}">WhatsApp</a></div></div>`;$("#ov").classList.add("on")}
 function closeD(){$("#ov").classList.remove("on");$("#sh").innerHTML=""}
-function render(){$("#v").innerHTML=tab==="home"?home():tab==="pub"?pub():mine();["home","pub","mine"].forEach(t=>$("#n-"+t).classList.toggle("on",t===tab));if(tab==="home")list();if(tab==="pub"&&user)fx();$("#lo").style.display=user?"":"none"}
+function render(){$("#v").innerHTML=tab==="home"?home():tab==="pub"?pub():mine();["home","pub","mine"].forEach(t=>$("#n-"+t).classList.toggle("on",t===tab));if(tab==="home")renderList();if(tab==="pub"&&user)fx();$("#lo").style.display=user?"":"none"}
 render();load();
 sb.auth.getSession().then(r=>{user=r.data.session?r.data.session.user:null;render()});
+setTimeout(()=>{const e=$("#sp");if(e)e.remove()},2400);
 sb.auth.onAuthStateChange((_e,s)=>{user=s?s.user:null});
 </script>
 </body>
