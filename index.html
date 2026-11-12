@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2b9ce3">
+<title>Still Home</title>
+<style>
+:root{--bg:#f4f9fd;--card:#fff;--text:#0f2a43;--muted:#5d7488;--brand:#2b9ce3;--brand-d:#1779b8;--soft:#e3f2fc;--line:#dbe8f2;--ok:#1f9d6b;--bad:#d2493f;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1824;--card:#13263a;--text:#e8f3fb;--muted:#93aabd;--brand:#2b9ce3;--brand-d:#7cc7f5;--soft:#173551;--line:#22405b;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:76px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--brand);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px}
+header b{font-size:20px}header small{display:block;opacity:.9;font-size:12px}
+main{max-width:640px;margin:0 auto;padding:14px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.seg{grid-column:1/-1;display:flex;background:var(--soft);border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;color:var(--muted);padding:9px 4px;border-radius:10px;font:inherit;font-size:14px;font-weight:600}
+.seg button.on{background:var(--card);color:var(--brand-d);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font:inherit}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:12px 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px}
+.m{height:170px;background:var(--soft);position:relative}.m img,.m video{width:100%;height:100%;object-fit:cover;display:block}
+.ph{height:100%;display:flex;align-items:center;justify-content:center;font-size:54px;background:linear-gradient(135deg,hsl(var(--h) 80% 88%),hsl(var(--h) 70% 72%))}
+.tag{position:absolute;left:10px;top:10px;background:#fff;color:#1779b8;font-size:12px;font-weight:700;padding:4px 9px;border-radius:20px}
+.tag.v{left:auto;right:10px;background:#0f2a43;color:#fff}
+.b{padding:12px 14px}.b h3{margin:0 0 2px;font-size:17px}.pr{color:var(--brand-d);font-weight:800}
+.mu{color:var(--muted);font-size:14px}
+.btn{display:inline-block;border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;background:var(--brand);color:#fff;text-decoration:none;text-align:center;cursor:pointer}
+.btn.g{background:var(--soft);color:var(--brand-d)}.btn.w{background:#25a244}.btn.r{background:var(--bad)}.btn:disabled{opacity:.6}
+.row{display:flex;gap:8px;margin-top:10px}.row>*{flex:1}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;color:var(--muted);padding:9px 0;font:inherit;font-size:12px;font-weight:600}
+nav button span{display:block;font-size:21px}nav button.on{color:var(--brand-d)}
+.ov{position:fixed;inset:0;background:rgba(5,20,35,.6);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.ov.on{display:flex}.sh{background:var(--card);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.sh .m{height:230px}.x{position:absolute;right:10px;top:10px;z-index:2;background:#fff;color:#0f2a43;border:0;width:34px;height:34px;border-radius:50%;font-size:18px}
+.st{font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--soft)}.st.ok{color:var(--ok)}.st.off{color:var(--bad)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#0f2a43;color:#fff;padding:10px 16px;border-radius:12px;z-index:30;display:none;max-width:90%;text-align:center}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.note{font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+<svg width="40" height="40" viewBox="24 28 152 150" fill="none" aria-label="Still Home"><circle cx="100" cy="146" r="30" fill="#fff" fill-opacity=".35"/><g stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M72 170H42Q32 170 32 160V100L100 36L168 100V160Q168 170 158 170H128"/><path d="M72 158H62Q54 158 54 150V106L100 60L146 106V150Q146 158 138 158H128"/><path d="M72 170V124Q72 116 80 116H120Q128 116 128 124V170"/></g></svg>
+<div><b>Still Home</b><small>Toujours chez vous, à Cotonou</small></div>
+</header>
+<main id="v"></main>
+<nav>
+<button id="n-home" onclick="go('home')"><span>🔎</span>Annonces</button>
+<button id="n-pub" onclick="go('pub')"><span>➕</span>Publier</button>
+<button id="n-mine" onclick="go('mine')"><span>📋</span>Mes annonces</button>
+</nav>
+<div class="ov" id="ov" onclick="if(event.target===this)closeD()"><div class="sh" id="sh"></div></div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script>
+const sb=supabase.createClient("https://gubfawtcnqiuafdkwreo.supabase.co","sb_publishable_U5lbT5paxiKEfDKjzmtL_g_r4M3zAio");
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Number(n).toLocaleString("fr-FR").replace(/[\u202f\u00a0]/g," ")+" FCFA";
+const tel=x=>String(x.tel||"").replace(/\D/g,"");
+let L=[],M=[],user=null,tab="home",f={type:"all",q:"",max:""},pend=null,state="load";
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2800)}
+function go(t){tab=t;pend=null;render();window.scrollTo(0,0);if(t==="mine"&&user)loadMine()}
+const media=(x,big)=>x.media_url&&x.media_type==="image"?`<img src="${esc(x.media_url)}" alt="" loading="lazy">`:x.media_url&&x.media_type==="video"?(big?`<video src="${esc(x.media_url)}" controls playsinline preload="metadata"></video>`:`<div class="ph" style="--h:205">▶</div>`):`<div class="ph" style="--h:${190+(x.pieces||1)*8}">${x.type==="meuble"?"🛋️":"🏠"}</div>`;
+const tagT=x=>x.type==="meuble"?"Meublé":"Non meublé";
+function card(x,extra){return `<article class="card" onclick="openD('${x.id}')"><div class="m">${media(x)}<span class="tag">${tagT(x)}</span>${x.media_type==="video"?'<span class="tag v">Vidéo</span>':""}</div><div class="b"><h3>${esc(x.titre)}</h3><div class="pr">${fmt(x.prix)} <span class="mu">/ mois</span></div><div class="mu">📍 ${esc(x.quartier)} · ${x.pieces} pièce${x.pieces>1?"s":""}</div>${extra||""}</div></article>`}
+function quartiers(){const s=new Set(["Cadjehoun","Fidjrossè","Haie Vive","Akpakpa","Agla","Godomey","Ganhi","Ladji","Vèdoko"]);L.forEach(x=>s.add(x.quartier));return[...s].sort()}
+const dl=()=>`<datalist id="qs">${quartiers().map(q=>`<option value="${esc(q)}">`).join("")}</datalist>`;
+function home(){return `<div class="filters"><div class="seg">${[["all","Tous"],["meuble","Meublés"],["non","Non meublés"]].map(a=>`<button class="${f.type===a[0]?"on":""}" onclick="f.type='${a[0]}';render()">${a[1]}</button>`).join("")}</div><input list="qs" placeholder="Quartier…" value="${esc(f.q)}" oninput="f.q=this.value;list()"><input type="number" inputmode="numeric" placeholder="Prix max (FCFA)" value="${esc(f.max)}" oninput="f.max=this.value;list()">${dl()}</div><div id="list"></div>`}
+function list(){const e=$("#list");if(!e)return;if(state==="load"&&!L.length){e.innerHTML='<div class="empty">Chargement…</div>';return}if(state==="err"&&!L.length){e.innerHTML='<div class="empty">Connexion lente ou coupée.<div class="row"><button class="btn" onclick="load()">Réessayer</button></div></div>';return}const r=L.filter(x=>(f.type==="all"||x.type===f.type)&&(!f.q||x.quartier.toLowerCase().includes(f.q.toLowerCase()))&&(!f.max||x.prix<=+f.max));e.innerHTML=r.length?r.map(x=>card(x)).join(""):'<div class="empty">Aucune annonce pour le moment.</div>'}
+async function load(){state="load";list();const r=await sb.from("annonces").select("*").eq("dispo",true).order("created_at",{ascending:false}).limit(60);if(r.error)state="err";else{L=r.data;state="ok"}list()}
+async function loadMine(){const r=await sb.from("annonces").select("*").eq("user_id",user.id).order("created_at",{ascending:false});if(r.error)return toast("Impossible de charger vos annonces");M=r.data;if(tab==="mine")render()}
+function auth(t){return `<h2 style="margin:4px 0">${t}</h2><form onsubmit="doAuth(event)"><label>E-mail</label><input name="e" type="email" required autocomplete="email"><label>Mot de passe (6 caractères minimum)</label><input name="p" type="password" required minlength="6" autocomplete="current-password"><div class="row"><button class="btn" type="submit" value="in">Se connecter</button><button class="btn g" type="submit" value="up">Créer un compte</button></div></form>`}
+async function doAuth(e){e.preventDefault();const d=new FormData(e.target),up=e.submitter&&e.submitter.value==="up",c={email:d.get("e").trim(),password:d.get("p")};const r=up?await sb.auth.signUp(c):await sb.auth.signInWithPassword(c);if(r.error)return toast(r.error.message);if(!r.data.session)return toast("Vérifiez votre e-mail pour confirmer votre compte");user=r.data.user;toast("Connecté ✓");render();if(tab==="mine")loadMine()}
+async function logout(){await sb.auth.signOut();user=null;M=[];toast("Déconnecté");render()}
+function pub(){if(!user)return auth("Connectez-vous pour publier");return `<h2 style="margin:4px 0">Publier une annonce</h2><form onsubmit="submitP(event)"><label>Titre</label><input name="titre" required maxlength="70" placeholder="Ex : Studio meublé climatisé"><label>Type</label><select name="type"><option value="meuble">Meublé</option><option value="non">Non meublé</option></select><label>Quartier</label><input name="quartier" list="qs" required placeholder="Ex : Cadjehoun">${dl()}<label>Loyer mensuel (FCFA)</label><input name="prix" type="number" inputmode="numeric" required min="1"><label>Nombre de pièces</label><input name="pieces" type="number" inputmode="numeric" required min="1" value="1"><label>Description</label><textarea name="desc" rows="3" maxlength="400"></textarea><label>Vous êtes</label><select name="role"><option>Propriétaire</option><option>Démarcheur</option></select><label>Téléphone / WhatsApp (avec 229)</label><input name="tel" type="tel" inputmode="tel" required placeholder="229XXXXXXXX"><label>Photo ou vidéo (20 Mo max)</label><input name="m" type="file" accept="image/*,video/*"><div class="note">Les photos sont réduites automatiquement pour rester légères.</div><div class="row"><button class="btn" type="submit">Publier</button></div></form>`}
+function shrink(file){return new Promise((ok,ko)=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1280/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):ko(new Error("Image illisible")),"image/jpeg",.75)};i.onerror=()=>ko(new Error("Image illisible"));i.src=URL.createObjectURL(file)})}
+async function submitP(e){e.preventDefault();const b=e.submitter,d=new FormData(e.target),m=d.get("m");b.disabled=true;b.textContent="Envoi en cours…";let url=null,mt=null;try{if(m&&m.size){mt=m.type.indexOf("video")===0?"video":"image";if(m.size>20*1048576)throw new Error("Fichier trop lourd (20 Mo max)");const blob=mt==="image"?await shrink(m):m,path=`${user.id}/${Date.now()}.${mt==="image"?"jpg":(m.name.split(".").pop()||"mp4")}`,u=await sb.storage.from("medias").upload(path,blob,{contentType:mt==="image"?"image/jpeg":m.type,cacheControl:"31536000"});if(u.error)throw u.error;url=sb.storage.from("medias").getPublicUrl(path).data.publicUrl}
+const r=await sb.from("annonces").insert({titre:d.get("titre").trim(),type:d.get("type"),quartier:d.get("quartier").trim(),prix:+d.get("prix"),pieces:+d.get("pieces"),description:d.get("desc").trim(),role:d.get("role"),tel:d.get("tel").replace(/\D/g,""),media_url:url,media_type:mt});if(r.error)throw r.error;toast("Annonce publiée ✓");go("mine");load()}catch(err){toast(err.message||"Erreur, réessayez");b.disabled=false;b.textContent="Publier"}}
+function mine(){if(!user)return auth("Connectez-vous pour voir vos annonces");return `<h2 style="margin:4px 0">Mes annonces</h2>`+(M.length?M.map(x=>card(x,`<div style="margin-top:8px"><span class="st ${x.dispo?"ok":"off"}">${x.dispo?"● En ligne":"● Hors marché"}</span></div><div class="row"><button class="btn g" onclick="event.stopPropagation();tg('${x.id}')">${x.dispo?"Mettre hors marché":"Remettre en ligne"}</button><button class="btn ${pend===x.id?"r":"g"}" onclick="event.stopPropagation();del('${x.id}')">${pend===x.id?"Confirmer ?":"Supprimer"}</button></div>`)).join(""):'<div class="empty">Vous n’avez pas encore publié d’annonce.</div>')+`<div class="row"><button class="btn g" onclick="logout()">Se déconnecter</button></div>`}
+async function tg(id){const x=M.find(a=>a.id===id),r=await sb.from("annonces").update({dispo:!x.dispo}).eq("id",id);if(r.error)return toast("Échec, réessayez");x.dispo=!x.dispo;toast(x.dispo?"Annonce remise en ligne":"Annonce hors marché");render();load()}
+async function del(id){if(pend!==id){pend=id;return render()}const x=M.find(a=>a.id===id),r=await sb.from("annonces").delete().eq("id",id);pend=null;if(r.error)return toast("Échec, réessayez");if(x.media_url){const p=x.media_url.split("/medias/")[1];if(p)sb.storage.from("medias").remove([decodeURIComponent(p)])}M=M.filter(a=>a.id!==id);toast("Annonce supprimée");render();load()}
+function openD(id){const x=[...M,...L].find(a=>a.id===id);if(!x)return;$("#sh").innerHTML=`<div class="m">${media(x,true)}<button class="x" onclick="closeD()">✕</button><span class="tag">${tagT(x)}</span></div><div class="b"><h3 style="font-size:20px">${esc(x.titre)}</h3><div class="pr" style="font-size:19px">${fmt(x.prix)} <span class="mu">/ mois</span></div><div class="mu">📍 ${esc(x.quartier)}, Cotonou · ${x.pieces} pièce${x.pieces>1?"s":""}</div><p>${esc(x.description)||"Aucune description."}</p><div class="mu">Contact : ${esc(x.role)}</div><div class="row"><a class="btn" href="tel:+${tel(x)}">📞 Appeler</a><a class="btn w" target="_blank" rel="noopener" href="https://wa.me/${tel(x)}?text=${encodeURIComponent("Bonjour, je suis intéressé par : "+x.titre+" (Still Home)")}">WhatsApp</a></div></div>`;$("#ov").classList.add("on")}
+function closeD(){$("#ov").classList.remove("on");$("#sh").innerHTML=""}
+function render(){$("#v").innerHTML=tab==="home"?home():tab==="pub"?pub():mine();["home","pub","mine"].forEach(t=>$("#n-"+t).classList.toggle("on",t===tab));if(tab==="home")list()}
+render();load();
+sb.auth.getSession().then(r=>{user=r.data.session?r.data.session.user:null;render()});
+sb.auth.onAuthStateChange((_e,s)=>{user=s?s.user:null});
+</script>
+</body>
+</html>
